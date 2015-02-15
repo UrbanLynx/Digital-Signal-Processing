@@ -23,17 +23,12 @@ def discretize_impulse(sg):
 
 
 def kotelnikov(sig, t):
-    sum_t = 0
-    for k in range(-sig.k_limit, sig.k_limit, 1):
-        sum_t += sig.signal(k*sig.dt) * my_sinc(math.pi/sig.dt*(t-k*sig.dt))
-    return sum_t
+    return sum([sig.signal(k*sig.dt) * my_sinc(math.pi/sig.dt*(t-k*sig.dt))
+                for k in range(-sig.k_limit, sig.k_limit, 1)])
 
 
 def my_sinc(x):
-    if x != 0:
-        return math.sin(x) / x
-    else:
-        return 1.0
+    return math.sin(x) / x if x != 0 else 1.0
 
 
 def plot_signal(signals):
@@ -51,4 +46,5 @@ def plot_signal(signals):
     plt.show()
 
 
-main()
+if __name__ == "__main__":
+    main()
