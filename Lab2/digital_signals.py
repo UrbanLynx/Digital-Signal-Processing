@@ -2,6 +2,7 @@ import math
 
 
 class DigitalSignal:
+    # TODO: edit doc strings
     """
     Class represents settings for discretization of a signal
 
@@ -19,7 +20,7 @@ class DigitalSignal:
     ideal_samples = 1000
     x_dft, y_dft = None, None
     w_dft, f_dft, f_fft = None, None, None
-    dft_samples = 100
+    dft_samples = 200
     dt = 0.1
 
     global_limit = dft_samples * dt/2
@@ -32,19 +33,22 @@ class ImpulseSignal(DigitalSignal):
     amplitude - amplitude of a signal
     """
 
-    impulse_limit = 1
+    impulse_left_limit = -1
+    impulse_right_limit = 1
     amplitude = 1
 
     def __init__(self):
         self.title = 'Impulse signal'
 
     def signal(self, x):
-        return self.amplitude if -self.impulse_limit <= x <= self.impulse_limit else 0
+        return self.amplitude if self.impulse_left_limit <= x <= self.impulse_right_limit else 0
+
 
 class SinSignal(DigitalSignal):
 
     def signal(self, x):
         return math.cos(x)
+
 
 class GaussianSignal(DigitalSignal):
     """
