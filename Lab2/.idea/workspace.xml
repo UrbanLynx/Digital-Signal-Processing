@@ -27,8 +27,8 @@
       <file leaf-file-name="fourier_transform.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fourier_transform.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6496815" vertical-offset="493" max-vertical-offset="1666">
-              <caret line="47" column="24" selection-start-line="47" selection-start-column="24" selection-end-line="47" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.42250532" vertical-offset="1093" max-vertical-offset="1751">
+              <caret line="76" column="60" selection-start-line="76" selection-start-column="60" selection-end-line="76" selection-end-column="60" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -475,8 +475,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fourier_transform.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6496815" vertical-offset="493" max-vertical-offset="1666">
-          <caret line="47" column="24" selection-start-line="47" selection-start-column="24" selection-end-line="47" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.42250532" vertical-offset="1093" max-vertical-offset="1751">
+          <caret line="76" column="60" selection-start-line="76" selection-start-column="60" selection-end-line="76" selection-end-column="60" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

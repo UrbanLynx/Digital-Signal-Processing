@@ -25,12 +25,14 @@ def make_fourier_transform(sig):
 
     sig.x_dft = linspace(-sig.global_limit, sig.global_limit, sig.dft_samples)
     sig.y_dft = signal_vectorized(sig.x_dft)
-    sig.y_dft = remove_twin(sig)
+    sig.y_dft_twin = remove_twin(sig)
 
     sig.w_dft = linspace(0, 1.0/(2.0*sig.dt), sig.dft_samples)
     sig.f_dft = abs(array(compute_dft(sig.y_dft)))
+    sig.f_dft_twin = abs(array(compute_dft(sig.y_dft_twin)))
 
     sig.f_fft = abs(fftpack.fft(sig.y_dft))
+    sig.f_fft_twin = abs(fftpack.fft(sig.y_dft_twin))
 
 
 def remove_twin(sig):
@@ -72,18 +74,21 @@ def plot_signal(signals):
     fig, axes = plt.subplots(num, 3)
     for n,sg in enumerate(signals):
         axes[n,0].set_title(sg.title)
-        axes[n,0].plot(sg.x_ideal, sg.y_ideal, 'r')
+        axes[n,0].plot(sg.x_ideal, sg.y_ideal, 'r', label='Signal')
 
-        axes[n,1].set_title('Discrete Fourier Transform')
-        axes[n,1].stem(arange(0,sg.dft_samples), sg.f_dft)
+        axes[n,1].set_title('DFT and FFT')
+        axes[n,1].plot(arange(0,sg.dft_samples), sg.f_dft, 'b', label='DFT')
+        axes[n,1].plot(arange(0,sg.dft_samples), sg.f_fft, 'g', label='FFT')
 
-        axes[n,2].set_title('Fast Fourier Transform')
-        axes[n,2].stem(arange(0,sg.dft_samples), sg.f_fft)
+        axes[n,2].set_title('DFT and FFT without twin effect')
+        axes[n,2].plot(arange(0,sg.dft_samples), sg.f_dft_twin, 'b', label='DFT')
+        axes[n,2].plot(arange(0,sg.dft_samples), sg.f_fft_twin, 'g', label='FFT')
 
         for axis in axes[n]:
             axis.margins(0.05)
             axis.axis('tight')
             axis.grid(True)
+            axis.legend(loc=0);
 
     plt.tight_layout()
     plt.show()
