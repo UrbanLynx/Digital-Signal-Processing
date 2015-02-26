@@ -1,7 +1,6 @@
 from pylab import *
 from digital_signals import *
-import scipy.signal
-from cmath import exp, pi
+from numpy import fft
 
 def main():
     imp_sig = ImpulseSignal()
@@ -21,14 +20,23 @@ def make_signal(sig):
     signal_vectorized = vectorize(sig.signal)
     sig.x_dft = linspace(-sig.global_limit, sig.global_limit, sig.dft_samples)
     sig.y_dft = signal_vectorized(sig.x_dft)
+    sig.f_fft = fft.fft(sig.y_dft)
 
 
 def make_convolution(sig_a, sig_b):
     conv_sig = DigitalSignal()
-    # conv_sig.y_dft = scipy.signal.fftconvolve(sig_a.y_dft, sig_b.y_dft)*conv_sig.dt/2
-    conv_sig.y_dft = convolve(sig_a.y_dft, sig_b.y_dft)*conv_sig.dt/2
-    conv_sig.x_dft = linspace(-conv_sig.global_limit*2,conv_sig.global_limit*2,conv_sig.dft_samples*2-1)
+    conv_sig.f_fft = sig_a.f_fft*sig_b.f_fft
+    conv_sig.y_dft = fft.fftshift(fft.ifft(conv_sig.f_fft))*conv_sig.dt/2
+    conv_sig.x_dft = sig_a.x_dft
     return conv_sig
+
+
+# old version with in built convolution
+# def make_convolution(sig_a, sig_b):
+#     conv_sig = DigitalSignal()
+#     conv_sig.y_dft = convolve(sig_a.y_dft, sig_b.y_dft)*conv_sig.dt/2
+#     conv_sig.x_dft = linspace(-conv_sig.global_limit*2,conv_sig.global_limit*2,conv_sig.dft_samples*2-1)
+#     return conv_sig
 
 
 def plot_signals(signal_tuples):
