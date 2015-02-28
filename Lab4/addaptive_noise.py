@@ -11,7 +11,7 @@ class DigitalNoise:
 
 
 class ImpulseNoise(DigitalNoise):
-    num_impulses = 5
+    num_impulses = 7
     min_amplitude = 0.5
     max_amplitude = 1
     title = 'Impulse Noise'
