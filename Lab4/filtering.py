@@ -1,50 +1,73 @@
 from pylab import *
 from digital_signals import *
 from addaptive_noise import *
+from signal_filters import *
+from numpy import fft
 
 
 def main():
-    gaus_sig1 = GaussianSignal()
-    gaus_sig2 = GaussianSignal()
-
-    imp_noise = ImpulseNoise()
-    gaus_noise = GaussianNoise()
-
-    for sig, noise in zip((gaus_sig1,gaus_sig2),(imp_noise,gaus_noise)):
-        make_signal(sig)
-        noise.make_noise(sig)
-        make_fourier_transform(sig)
-
-    plot_signal((gaus_sig1,gaus_sig2))
+    filter_low_frequencies()
 
 
-def make_signal(sig):
-    signal_vectorized = vectorize(sig.signal)
-    sig.x_dft = linspace(-sig.global_limit, sig.global_limit, sig.dft_samples)
-    sig.y_dft = signal_vectorized(sig.x_dft)
+def filter_low_frequencies():
+    import itertools
+    n = GaussianSignal.dft_samples
+    sig_list = [GaussianSignal() for k in range(6)]
+    noise_list = [ImpulseNoise(n),GaussianNoise(n)]
+    filter_list = [ButterworthLowIir(), ButterworthLowFir(), GaussianLowFir()]
+    systems_list = list(itertools.product(noise_list, filter_list))
+    systems_list = zip(sig_list,zip(*systems_list)[0],zip(*systems_list)[1])
+
+    for component in systems_list:
+        filter_signal(component[0],component[1],component[2])
+
+    plot_signal(systems_list)
 
 
-def make_fourier_transform(sig):
-    sig.w_dft = linspace(0, 1.0/(2.0*sig.dt), sig.dft_samples)
-    sig.f_dft = fftpack.fft(sig.y_dft)
+def filter_signal(sig, noise, sig_filter):
+    sig.make_signal()
+    noise.make_noise(sig)
+    sig.make_fourier_transform()
+    H = sig_filter.filter_signal(sig.dft_samples,sig.dt)
+    sig.f_dft_filter = sig.f_dft*H
+    sig.y_dft_filter = fftpack.ifft(sig.f_dft_filter)
 
 
-def plot_signal(signals):
-    num = len(signals)
+def plot_signal(systems):
+    num = len(systems)/2
 
-    fig, axes = plt.subplots(num, 2)
-    for n,sg in enumerate(signals):
-        axes[n,0].set_title(sg.title)
-        axes[n,0].plot(sg.x_dft, sg.y_dft, 'r', label='Signal')
 
-        axes[n,1].set_title('DFT')
-        axes[n,1].plot(arange(0,sg.dft_samples), sg.f_dft, 'b', label='DFT')
+    # figa, axesa = plt.subplots()
+    # for sg in systems:
+    #     sig = sg[0]
+    #     noise = sg[1]
+    #     filt = sg[2]
+    #     axis.plot(sig.x_dft, sig.y_dft, 'r', label='Signal with '+noise.title)
+    #     axis.plot(sig.x_dft, sig.y_dft_filter, 'b', label='Filtered Signal')
+    #
+    #     axis.margins(0.05)
+    #     axis.axis('tight')
+    #     axis.grid(True)
 
-        for axis in axes[n]:
-            axis.margins(0.05)
-            axis.axis('tight')
-            axis.grid(True)
-            axis.legend(loc=0);
+
+    fig, axes = plt.subplots(2, num)
+    # for n,component in enumerate(systems):
+    #     sig = component[0]
+    #     noise = component[1]
+    #     filt = component[2]
+    #     axes[n//num,n].set_title(filt.title)
+    #     axes[n//num,n].plot(sig.x_dft, sig.y_dft, 'r', label='Signal with '+noise.title)
+    #     axes[n//num,n].plot(sig.x_dft, sig.y_dft_filter, 'b', label='Filtered Signal')
+
+    for axis,sg in zip(axes.flat,systems):
+        axis.set_title(sg[2].title)
+        axis.plot(sg[0].x_dft, sg[0].y_dft, 'g', label='Signal')
+        axis.plot(sg[0].x_dft, sg[0].y_dft_filter, 'r', lw=2, label='Filter')
+
+        axis.margins(0.05)
+        axis.axis('tight')
+        axis.grid(True)
+        axis.legend(loc=0)
 
     plt.tight_layout()
     plt.show()

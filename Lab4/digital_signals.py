@@ -1,4 +1,5 @@
 import math
+from pylab import *
 
 
 class DigitalSignal:
@@ -13,13 +14,27 @@ class DigitalSignal:
     title - title of plot
     """
 
-    x_dft, y_dft = None, None
-    w_dft, f_dft = None, None
-    dft_samples = 100
-    dt = 0.1
+    x_dft, y_dft, y_dft_filter = None, None, None
+    w_dft, f_dft, f_dft_filter = None, None, None
+    dft_samples = 1000
+    dt = 0.01
 
-    global_limit = dft_samples * dt/2
+    global_limit = dft_samples * dt / 2
     title = 'signal'
+
+    filter_border = 0.3
+
+    def signal(self, x):
+        pass
+
+    def make_signal(self):
+        signal_vectorized = vectorize(self.signal)
+        self.x_dft = linspace(-self.global_limit, self.global_limit, self.dft_samples)
+        self.y_dft = signal_vectorized(self.x_dft)
+
+    def make_fourier_transform(self):
+        self.w_dft = linspace(0, 1.0 / (2.0 * self.dt), self.dft_samples)
+        self.f_dft = fftpack.fft(self.y_dft)
 
 
 class ImpulseSignal(DigitalSignal):
@@ -52,4 +67,4 @@ class GaussianSignal(DigitalSignal):
         self.title = 'Gaussian signal'
 
     def signal(self, x):
-        return self.amplitude*math.exp(-x**2/self.sigma**2)
+        return self.amplitude * math.exp(-x ** 2 / self.sigma ** 2)
