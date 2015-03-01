@@ -5,20 +5,25 @@ from signal_filters import *
 
 
 def main():
-    systems_list = get_signal_systems()
+    filter_list_low = [ButterworthLowIir(), ButterworthLowFir(), GaussianLowFir()]
+    process_signal_system(filter_list_low)
 
+    filter_list_high = [ButterworthHighIir(), ButterworthHighFir(), GaussianHighFir()]
+    process_signal_system(filter_list_high)
+
+
+def process_signal_system(filter):
+    systems_list = get_signal_systems(filter)
     for component in systems_list:
         noise_filter_signal(component[0],component[1],component[2])
-
     plot_signal(systems_list)
 
 
-def get_signal_systems():
+def get_signal_systems(filter_list):
     import itertools
     n = GaussianSignal.dft_samples
     sig_list = [GaussianSignal() for k in range(6)]
     noise_list = [ImpulseNoise(n),GaussianNoise(n)]
-    filter_list = [ButterworthLowIir(), ButterworthLowFir(), GaussianLowFir()]
     systems_list = list(itertools.product(noise_list, filter_list))
     systems_list = zip(sig_list,zip(*systems_list)[0],zip(*systems_list)[1])
 
