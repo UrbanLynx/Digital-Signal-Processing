@@ -2,6 +2,7 @@ from pylab import *
 from scipy import optimize as op
 import cmath as cm
 import numpy as np
+from scipy import optimize as op
 
 def lab7():
     t = arange(-5,5,0.05)
@@ -20,11 +21,11 @@ def lab7():
     def rho(alpha):
         m = arange(0,N,1)
         zetta = 1 + (2*math.pi*m/T) ** 2
-        beta = dt / N * sum(alpha**2 * zetta * abs(u1s)**2 / (abs(u2s)**2 * dt**2 + alpha*zetta)**2 )
+        beta = dt / N * sum(alpha**2 * zetta * abs(u1s)**2 / (abs(u2s)**2 * dt**2 + alpha*zetta)**2)
         gamma = dt / N * sum(abs(u2s)**2 * dt**2 * abs(u1s)**2 * zetta / (abs(u2s)**2 * dt**2 + alpha*(1 - 2*math.pi*m/T)**2)**2)
         return beta - (std(delta) + std(epsilon)*np.sqrt(gamma))**2
 
-    alpha = op.fsolve(rho,array([0.5]))[0]
+    alpha = op.bisect(rho,0.001,1)
 
     def H(k):
         k = array([k]).T
@@ -33,24 +34,13 @@ def lab7():
                     alpha*(1 + (2*math.pi*m/T)**2)), (N,1)),1)
         return h.real
 
-    # fig, axes = plt.subplots(2,1)
-    #
-    # axes[0].plot(t, u1, label='u1')
-    # axes[0].plot(t, u2, label='u2')
-    # axes[0].plot(t, delta, label='delta')
-    # axes[0].plot(t, epsilon, label='epsilon')
-    # axes[0].plot(t, real(fftpack.ifft(u2s * H(arange(0,N,1)))), label='reconstracted')
-    # axes[0].grid(True)
-    # axes[0].legend(loc=0)
-    # axes[1].plot(arange(0,N,1), H(arange(0,N,1)))
-
     fig, axes = plt.subplots()
 
     axes.plot(t, u1, label='u1')
     axes.plot(t, u2, label='u2')
     axes.plot(t, delta, label='delta')
     axes.plot(t, epsilon, label='epsilon')
-    axes.plot(t, real(fftpack.ifft(u2s * H(arange(0,N,1)))), label='reconstracted')
+    axes.plot(t, real(fftpack.ifft(u2s * H(arange(0,N,1)))), label=str(alpha))
     axes.grid(True)
     axes.legend(loc=0)
 
