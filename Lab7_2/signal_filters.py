@@ -14,7 +14,7 @@ class TihonovFilter:
     def calculate_h(self, k, alpha, sig_org, sig_cor):
         dx = sig_org.dt
         N = sig_org.dft_samples
-        T = N
+        T = 2*sig_org.global_limit
         return dx/N * sum([(cm.exp(complex(0,2*math.pi*k*m/N)) * sig_org.f_dft[m] * sig_org.f_dft[m].conjugate()) /
                            ((abs(sig_cor.f_dft[m])**2 * dx**2 + alpha*(1 + (2*math.pi*m/T)**2))**2) for m in range(0,N-1)])
 
