@@ -11,14 +11,14 @@ def main():
     sig_org = GaussianSignal(2)
     sig_org.make_signal()
     noise_org = ImpulseNoise(GaussianSignal.dft_samples)
-    noise_org.make_noise(sig_org)
-    #sig_org.noise = noise.y_noise
+    #noise_org.make_noise(sig_org)
+    sig_org.noise = noise_org.standart_deviation()
 
     sig_cor = GaussianSignal(1)
     sig_cor.make_signal()
     noise_cor = ImpulseNoise(GaussianSignal.dft_samples)
-    noise_cor.make_noise(sig_cor)
-    #sig_cor.noise = noise.y_noise
+    #noise_cor.make_noise(sig_cor)
+    sig_cor.noise = noise_cor.standart_deviation()
 
     sig_org.make_fourier_transform()
     sig_cor.make_fourier_transform()

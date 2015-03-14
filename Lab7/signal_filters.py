@@ -6,15 +6,15 @@ import cmath as cm
 class TihonovFilter:
     title = 'Tihonov Filter'
 
-    # def filter_signal(self, sig_org, sig_cor):
-    #     alpha = self.calculate_alpha(sig_org, sig_cor)
-    #     hs = [self.calculate_h(k,alpha[k],sig_org, sig_cor) for k in range(0,sig_org.dft_samples)]
-    #     return hs
-
     def filter_signal(self, sig_org, sig_cor):
         alpha = self.calculate_alpha(sig_org, sig_cor)
-        hs = [self.calculate_h(k,alpha,sig_org, sig_cor) for k in range(0,sig_org.dft_samples)]
+        hs = [self.calculate_h(k,alpha[k],sig_org, sig_cor) for k in range(0,sig_org.dft_samples)]
         return hs
+
+    # def filter_signal(self, sig_org, sig_cor):
+    #     alpha = self.calculate_alpha(sig_org, sig_cor)
+    #     hs = [self.calculate_h(k,alpha,sig_org, sig_cor) for k in range(0,sig_org.dft_samples)]
+    #     return hs
 
     def calculate_h(self, k, alpha, sig_org, sig_cor):
         dx = sig_org.dt
@@ -23,11 +23,11 @@ class TihonovFilter:
         return dx/N * sum([(cm.exp(complex(0,2*math.pi*k*m/N)) * sig_cor.f_dft[m].conjugate() * sig_org.f_dft[m]) /
                            ((sig_cor.f_dft[m].real**2 * dx**2 + alpha*(1 + (2*math.pi*m/T)**2))**2) for m in range(0,N-1)])
 
-    # def calculate_alpha(self, sig_org, sig_cor):
-    #     alphas = [op.bisect(self.p,0,1,args=(sig_org, sig_cor, n)) for n in range(sig_org.dft_samples)]
-    #     return alphas
     def calculate_alpha(self, sig_org, sig_cor):
-        return op.bisect(self.p,0,1,args=(sig_org, sig_cor))
+        alphas = [op.bisect(self.p,0,1,args=(sig_org, sig_cor)) for n in range(sig_org.dft_samples)]
+        return alphas
+    # def calculate_alpha(self, sig_org, sig_cor):
+    #     return op.bisect(self.p,0,1,args=(sig_org, sig_cor))
 
     # TODO: maybe remove sample_n from noise
     # def p(self,alpha,sig_org, sig_cor, sample_n):
