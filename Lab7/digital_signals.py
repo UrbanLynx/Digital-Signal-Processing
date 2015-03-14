@@ -16,8 +16,8 @@ class GaussianSignal:
 
     x_dft, y_dft, y_dft_filter = None, None, None
     w_dft, f_dft, f_dft_filter = None, None, None
-    dft_samples = 1000
-    dt = 0.01
+    dft_samples = 100
+    dt = 0.1
     noise = 0.05
 
     global_limit = dft_samples * dt / 2
