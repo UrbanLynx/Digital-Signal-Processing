@@ -12,8 +12,8 @@ def lab7():
 
     u1 = np.exp(-(t/1) ** 2)
     u2 = np.exp(-(t/2) ** 2)
-    delta = ((-1 + 2*np.random.rand(1,N)) * max(np.abs(u1)) * 0.05)[0]
-    epsilon = ((-1 + 2*np.random.rand(1,N)) * max(np.abs(u1)) * 0.05)[0]
+    delta = ((-1 + 2*np.random.rand(1,N)) * max(np.abs(u1)) * 0.0575)[0]
+    epsilon = ((-1 + 2*np.random.rand(1,N)) * max(np.abs(u1)) * 0.0575)[0]
 
     u1s = fftpack.fft(u1)
     u2s = fftpack.fft(u2)
@@ -40,7 +40,7 @@ def lab7():
     axes.plot(t, u2, label='u2')
     axes.plot(t, delta, label='delta')
     axes.plot(t, epsilon, label='epsilon')
-    axes.plot(t, real(fftpack.ifft(u2s * H(arange(0,N,1)))), label=str(alpha))
+    axes.plot(t, real(fftpack.ifft(u2s * H(arange(0,N,1)))), label='filter')
     axes.grid(True)
     axes.legend(loc=0)
 
